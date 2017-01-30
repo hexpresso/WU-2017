@@ -18,7 +18,7 @@ DECIMAL       HEXADECIMAL     DESCRIPTION
 mitsurugi@dojo:~/chall/FIC$
 ```
 
-Bon, mieux vaut tar que jamais:
+Mieux vaut tar que jamais:
 ```
 mitsurugi@dojo:~/chall/FIC$ binwalk -e Steg_ch1_2k17.jpg 
 
@@ -136,6 +136,8 @@ qosdoaaqksjd_qjsdb(" ag", plop, pmmidah_dsb_hdhsf);
 ```
 
 Une analyse à l'oeil permet de voir deux points intéressants: Seule la variable gsm sera affichée, et les variables gsd et fake sont assignées (iqkdf est utilisé pour construire fake). Nous sommes dans troll.js, et une variable s'appelle "fake"? Seems Legit! On lance un navigateur, après avoir ajouté la ligne alert(fake).
+
+![alert_fake](alert_fake.png)
 ```
 mitsurugi@dojo:~/chall/FIC$$ cat troll.html 
 <HTML>
@@ -143,15 +145,14 @@ mitsurugi@dojo:~/chall/FIC$$ cat troll.html
 </HTML>
 mitsurugi@dojo:~/chall/FIC$
 ```
-![alert_fake](alert_fake.png)
 
-Et la fenêtre d'alerte nous donne ce qui ressemble à un mot de passe:
+Nous obtenons quelquechose qui ressemble à un mot de passe:
 ![fake variable](fake.png)
 
 ```
 8e282b8743fa2db76fde$@$4f8251f04e9386fe3432
 ```
-Nous avons deux fichiers zippés avec mot de passe, tentons les. (Au passage, on remarque que ce pass se découpe plutôt bien en deux, avec ce '$@$' au milieu).
+Nous avons deux fichiers zippés avec mot de passe, tentons les.
 
 ```
 mitsurugi@dojo:~/chall/FIC/_Steg_ch1_2k17.jpg.extracted$ 7z x catch_this_pass.7z
@@ -204,4 +205,4 @@ jm	JL
 mitsurugi@dojo:~/chall/FIC/_Steg_ch1_2k17.jpg.extracted$ strings chall_steg_1.jpg 
 ```
 
-Quelquefois, le FLAG tombe alors qu'on ne s'y attend pas toujours \o/
+Quelquefois, le FLAG tombe alors qu'on ne s'y attend pas. \o/
