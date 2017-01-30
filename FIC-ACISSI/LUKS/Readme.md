@@ -4,7 +4,7 @@ La seule information disponible étant que le mot est long, et ne contient que d
 
 ## Découverte
 Le fichier fourni est un zip 7zip:
-̀̀̀
+```
 mitsurugi@dojo:~/chall/FIC$ file Full.Disk.Encryption.7z 
 Full.Disk.Encryption.7z: 7-zip archive data, version 0.3
 mitsurugi@dojo:~/chall/FIC$ 7z x Full.Disk.Encryption.7z 
@@ -23,12 +23,12 @@ Compressed: 2054040086
 mitsurugi@dojo:~/chall/FIC$ file FIC.Full-Disk-Encryption.vdi 
 FIC.Full-Disk-Encryption.vdi: VirtualBox Disk Image, major 1, minor 1 (<<< Oracle VM VirtualBox Disk Image >>>), 8589934592 bytes
 mitsurugi@dojo:~/chall/FIC$
-̀̀̀
+```
 
 Ok, un disque Virtual Box, on peut essayer de jouer un peu avec:
-̀̀̀
+```
 mitsurugi@dojo:~/chall/FIC$ qemu-system-x86_64 -m 1024 FIC.Full-Disk-Encryption.vdi
-̀̀̀
+```
 ![qemu](qemu_FIC.png)
 
 Et nous tombons dans l'initramfs, avec la demande de clé LUKS. Normal. Nous constatons que la partition chiffrée est la sda5_crypt.
