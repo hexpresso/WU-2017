@@ -1,2 +1,2 @@
-# WU-2016
-Writeups for CTF that took place in 2016.
+# WU-2017
+Writeups for CTF that took place in 2017.
