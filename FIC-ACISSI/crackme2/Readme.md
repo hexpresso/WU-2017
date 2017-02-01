@@ -277,7 +277,7 @@ gdb$ x/10i $eip
 Le suivi en pas à pas jusqu'au RET ne pose pas de difficultés particulières.
 L'instruction suivant le RET est un CALL 0x8048189
 
-## call   0x8048189
+### call   0x8048189
 Ce call implémente un syscall ( http://syscalls.kernelgrok.com/ )
 ```
 => 0x8048189:	mov    eax,0x30
@@ -314,7 +314,7 @@ Nous comprenons donc mieux le message lié à l'antidebug et à l'antipatch:
 Un INT3 doit être glissé dans le code, cet INT3 se fait trapper, une vérification
 d'intégrité est faite. 
 
-## Et l'INT3
+### Et l'INT3
 L'instruction qui suit le RET de la fonction en 0x8048189 est un INT3 (what a surprise!)
 
 Nous pouvons directement aller dans la fonction via un `set $eip=0x8048080`.
@@ -346,28 +346,29 @@ Les premières instructions comptent le nombre de caractères:
    0x80480bf:	inc    edx
    0x80480c0:	jmp    0x80480b7
    0x80480c2:	mov    WORD PTR ds:0x8049376,dx
-   0x80480c9:	cmp    WORD PTR ds:0x804933d,dx
+   0x80480c9:	cmp    WORD PTR ds:0x804933d,dx    //comparaison
    0x80480d0:	jne    0x80481e6
 gdb$ x/x 0x804933d
-0x804933d:	0x08
+0x804933d:	0x08                 // nous avons 8 à cette adresse
 gdb$
 ```
-Coup de hasard, le mot de passe semble faire 8 caractères, comme celui que j'ai entré.
+Ce nombre de caractères est comparé avec la valeur de l'adresse en 0x804933d qui vaut 8.
+J'ai rentré par hasard un mot de passe de 8 caractères :) la comparaison est donc bonne.
 
 ### Contrainte 1
 La suite du programme se déroule encore une fois:
 ```
 => 0x80480e0:	mov    edi,0x8049354
    0x80480e5:	mov    esi,0x8049347
-   0x80480ea:	mov    al,BYTE PTR [edi+edx*1]
-   0x80480ed:	mov    cl,BYTE PTR [edi+edx*1+0x1]
+   0x80480ea:	mov    al,BYTE PTR [edi+edx*1]         //caractère 'n'
+   0x80480ed:	mov    cl,BYTE PTR [edi+edx*1+0x1]     //caractère 'n+1'
    0x80480f1:	mov    bl,BYTE PTR [esi+edx*1]
    0x80480f4:	xor    al,cl
    0x80480f6:	cmp    al,bl
    0x80480f8:	jne    0x80481e6
    0x80480fe:	inc    edx
    0x80480ff:	inc    edx
-   0x8048100:	cmp    dx,WORD PTR ds:0x804933d
+   0x8048100:	cmp    dx,WORD PTR ds:0x804933d        //taille du pass => 8
    0x8048107:	jl     0x80480ea
 gdb$ x/s 0x8049354
 0x8049354:	"1234ABCD\n"
@@ -391,12 +392,12 @@ La suite du programme continue par:
    0x804810b:	xor    ebx,ebx
    0x804810d:	xor    ecx,ecx
    0x804810f:	xor    edx,edx
-   0x8048111:	mov    eax,0x8049354
+   0x8048111:	mov    eax,0x8049354             //le mot de passe entré
    0x8048116:	xor    ebx,ebx
    0x8048118:	mov    bl,BYTE PTR [eax+edx*1]
    0x804811b:	add    ecx,ebx
    0x804811d:	inc    edx
-   0x804811e:	cmp    dx,WORD PTR ds:0x804933d
+   0x804811e:	cmp    dx,WORD PTR ds:0x804933d  //la taille de référence du pass => 8
    0x8048125:	jl     0x8048116
    0x8048127:	cmp    ecx,DWORD PTR ds:0x804933f
    0x804812d:	jne    0x80481e6
@@ -418,10 +419,10 @@ Cette contrainte ressemble beaucoup à la précédente:
    0x804813b:	mov    eax,0x8049354
    0x8048140:	mov    ebx,DWORD PTR [eax+edx*1]
    0x8048143:	and    ebx,0xff
-   0x8048149:	shr    ebx,0x4
+   0x8048149:	shr    ebx,0x4                        //shift right de 4
    0x804814c:	add    ecx,ebx
    0x804814e:	inc    edx
-   0x804814f:	cmp    dx,WORD PTR ds:0x804933d
+   0x804814f:	cmp    dx,WORD PTR ds:0x804933d       //qui vaut toujours 8
    0x8048156:	jl     0x8048140
    0x8048158:	cmp    ecx,DWORD PTR ds:0x8049343
    0x804815e:	jne    0x80481e6
@@ -429,7 +430,7 @@ gdb$ x/dwx 0x8049343
 0x8049343:	0x00000025
 gdb$
 ```
-Seuls les 4 octets fort de chaque caractère du mot de passe sont additionnés, et leur somme doit faire 0x25
+Seuls les 4 octets fort de chaque caractère du mot de passe sont additionnés, et leur somme doit faire 0x25. Ceci donne encore assez peu d'information.
 
 ### Contrainte 4
 Encore une boucle qui va ajouter des contraintes sur le mot de passe:
@@ -438,7 +439,7 @@ Encore une boucle qui va ajouter des contraintes sur le mot de passe:
    0x8048166:	xor    ebx,ebx
    0x8048168:	xor    ecx,ecx
    0x804816a:	xor    edx,edx
-   0x804816c:	mov    eax,0x8049354
+   0x804816c:	mov    eax,0x8049354              //l'adresse du pass entré
    0x8048171:	mov    edi,0x804934f
    0x8048176:	mov    bl,BYTE PTR [eax+edx*2]
    0x8048179:	mov    cl,BYTE PTR [edi+edx*1]
