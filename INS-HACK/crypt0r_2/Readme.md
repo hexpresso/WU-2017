@@ -245,6 +245,7 @@ prototype is:
        The  function  fread()  reads nmemb items of data, each size bytes long, from the stream pointed to by stream, storing them at the location given by ptr.
 ```
 Let's get back to gdb:
+```
 gdb$ b * 0x4031c9
 Breakpoint 2 at 0x4031c9
 gdb$ b * 0x403239
